@@ -24,14 +24,24 @@ app.post('/apipost',(req,res) =>
 });
 
 app.post("/add_user",async(request, response) => {
-  const user = new userModel(request.body);  
-  try {
-    await user.save();
-    console.log(user);
-    response.send(user);
-  } catch (error) {
-    response.status(500).send(error);
-  }
+ 
+  const userscheck = await userModel.find({"Email":request.body.Email});
+  console.log(userscheck);
+      if(!userscheck)
+      {
+        const user = new userModel(request.body);  
+        try {
+          await user.save();
+          response.send(user);
+        } catch (error) {
+          response.status(500).send(error);
+        }
+      }
+      else
+      {
+        console.log("user exit");
+        response.send("User Exit !");
+      }
 });
 
 app.get("/users", async (request, response) => {
